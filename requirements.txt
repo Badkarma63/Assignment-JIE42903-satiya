@@ -1,6 +1,2 @@
-csv
-random
-requests
-io
-pandas
 streamlit 
+pandas
