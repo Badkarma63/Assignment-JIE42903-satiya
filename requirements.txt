@@ -1,2 +1,6 @@
-streamlit
+csv
+random
+requests
+io
 pandas
+streamlit 
