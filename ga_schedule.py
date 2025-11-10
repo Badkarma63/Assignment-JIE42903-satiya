@@ -6,6 +6,8 @@ import pandas as pd
 import streamlit as st
 
 # Function to read the CSV file and convert it to the desired format
+file_path = 'https://raw.githubusercontent.com/Badkarma63/Assignment-JIE42903-satiya/refs/heads/main/program_ratings.csv'
+
 def read_csv_to_dict(file_path):
     program_ratings = {}
     
