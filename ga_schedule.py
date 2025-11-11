@@ -1,13 +1,6 @@
 import csv
-import random
-import requests
-import io
-import pandas as pd
-import streamlit as st
 
 # Function to read the CSV file and convert it to the desired format
-file_path = 'https://raw.githubusercontent.com/Badkarma63/Assignment-JIE42903-satiya/refs/heads/main/program_ratings.csv'
-
 def read_csv_to_dict(file_path):
     program_ratings = {}
     
@@ -24,7 +17,7 @@ def read_csv_to_dict(file_path):
     return program_ratings
 
 # Path to the CSV file
-file_path = 'https://raw.githubusercontent.com/Badkarma63/Assignment-JIE42903-satiya/refs/heads/main/program_ratings.csv'
+file_path = '/content/program_ratings.csv'
 
 # Get the data in the required format
 program_ratings_dict = read_csv_to_dict(file_path)
@@ -162,3 +155,4 @@ for time_slot, program in enumerate(final_schedule):
     print(f"Time Slot {all_time_slots[time_slot]:02d}:00 - Program {program}")
 
 print("Total Ratings:", fitness_function(final_schedule))
+
