@@ -85,25 +85,32 @@ def mutate(schedule):
 # Genetic Algorithm
 def genetic_algorithm(initial_schedule, generations=GEN, population_size=POP, crossover_rate=0.8, mutation_rate=0.2, elitism_size=EL_S):
     population = [initial_schedule]
+
     for _ in range(population_size - 1):
         random_schedule = initial_schedule.copy()
         random.shuffle(random_schedule)
         population.append(random_schedule)
 
-    # Store GA stats for table
     ga_stats = []
 
     for generation in range(generations):
         new_population = []
+
         population.sort(key=lambda schedule: fitness_function(schedule), reverse=True)
         best_fit = fitness_function(population[0])
         avg_fit = sum(fitness_function(s) for s in population) / len(population)
-        ga_stats.append({"Generation": generation+1, "Best Fitness": best_fit, "Average Fitness": round(avg_fit,2)})
+
+        ga_stats.append({
+            "Generation": generation + 1,
+            "Best Fitness": best_fit,
+            "Average Fitness": round(avg_fit, 2)
+        })
 
         new_population.extend(population[:elitism_size])
 
         while len(new_population) < population_size:
             parent1, parent2 = random.choices(population, k=2)
+
             if random.random() < crossover_rate:
                 child1, child2 = crossover(parent1, parent2)
             else:
@@ -118,8 +125,8 @@ def genetic_algorithm(initial_schedule, generations=GEN, population_size=POP, cr
 
         population = new_population
 
-    return population[0], ga_stats  # return final schedule + GA stats
-
+    final_best = max(population, key=lambda schedule: fitness_function(schedule))
+    return final_best, ga_stats
 # ------------------------------------------------------------
 # STEP 3: STREAMLIT INTERFACE
 # ------------------------------------------------------------
@@ -142,12 +149,15 @@ if st.button("🚀 Run Genetic Algorithm"):
     initial_best_schedule = finding_best_schedule(all_possible_schedules)
 
     rem_t_slots = len(all_time_slots) - len(initial_best_schedule)
-    genetic_schedule, ga_stats = genetic_algorithm(initial_best_schedule,
-                                               generations=GEN,
-                                               population_size=POP,
-                                               crossover_rate=CO_R,
-                                               mutation_rate=MUT_R,
-                                               elitism_size=EL_S)
+
+    genetic_schedule, ga_stats = genetic_algorithm(
+        initial_best_schedule,
+        generations=GEN,
+        population_size=POP,
+        crossover_rate=CO_R,
+        mutation_rate=MUT_R,
+        elitism_size=EL_S
+    )
 
     final_schedule = initial_best_schedule + genetic_schedule[:rem_t_slots]
 
@@ -157,10 +167,11 @@ if st.button("🚀 Run Genetic Algorithm"):
     })
 
     st.subheader("📊 GA Progress per Generation")
-   st.table(pd.DataFrame(ga_stats))
+    st.table(pd.DataFrame(ga_stats))
+
+    st.subheader("🕒 Final Optimal Schedule")
+    st.table(schedule_df)
+
     st.success(f"⭐ Total Ratings: {fitness_function(final_schedule)}")
-
-    st.caption("Note: Results may vary slightly due to GA randomness.")
-
 
 
